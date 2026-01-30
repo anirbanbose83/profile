@@ -1,0 +1,450 @@
+# Construction Risk Analytics - Data Architecture (Medallion)
+diagram:
+  id: construction-risk-data
+  title: "Construction Risk Analytics - Data Architecture"
+  type: data
+  theme: light
+  dimensions:
+    width: 1600
+    height: 700
+  output:
+    filename: "construction-risk-data"
+
+layout:
+  direction: left-to-right
+  padding: 15
+  headerHeight: 50
+  layerPadding: 15
+  autoPosition: true
+  layerGap: 10
+  startX: 10
+  gridSpacing:
+    x: 12
+    y: 10
+  layers:
+    - id: sources
+      name: "Sources"
+      width: 170
+      columns: 1
+      accentColor: "#64748b"
+
+    - id: ingestion
+      name: "Ingestion"
+      width: 170
+      columns: 1
+      accentColor: "#8b5cf6"
+
+    - id: bronze
+      name: "Bronze"
+      width: 170
+      columns: 1
+      accentColor: "#CD7F32"
+
+    - id: silver
+      name: "Silver"
+      width: 170
+      columns: 1
+      accentColor: "#94a3b8"
+
+    - id: gold
+      name: "Gold"
+      width: 170
+      columns: 1
+      accentColor: "#ca8a04"
+
+    - id: consumption
+      name: "Consumption"
+      width: 170
+      columns: 1
+      fixedPositioning: true  # Keep explicit row order, don't auto-center nodes
+      accentColor: "#3b82f6"
+
+    - id: governance
+      name: "Data Governance"
+      type: crosscutting
+      y: 590
+      height: 100
+      accentColor: "#ef4444"
+
+# Flow Scenarios
+flows:
+  - id: realtime
+    name: "Real-time"
+    color: "#10b981"
+    speed: 1.5
+    path: [src-iot, ing-stream, brz-lake, slv-lake, gld-lake, con-realtime]
+
+  - id: batch
+    name: "Batch"
+    color: "#8b5cf6"
+    speed: 2
+    path: [src-docs, ing-batch, brz-lake, slv-lake, gld-lake, gld-mart, con-bi]
+
+  - id: ml
+    name: "ML"
+    color: "#f59e0b"
+    speed: 1.8
+    path: [gld-lake, gld-feature, con-ml]
+
+  - id: cdc
+    name: "CDC"
+    color: "#06b6d4"
+    speed: 1.7
+    path: [src-erp, ing-cdc, brz-lake, slv-lake, gld-lake, gld-mart, con-api]
+
+nodes:
+  # Data Sources - All core as entry points
+  - id: src-iot
+    layer: sources
+    role: core
+    row: 0
+    label: "IoT Sensors"
+    sublabel: "50K devices"
+    generic: sensor
+
+  - id: src-camera
+    layer: sources
+    role: core
+    row: 1
+    label: "Cameras"
+    sublabel: "Vision"
+    generic: camera
+
+  - id: src-docs
+    layer: sources
+    role: core
+    row: 2
+    label: "Documents"
+    sublabel: "PDFs"
+    generic: document
+
+  - id: src-weather
+    layer: sources
+    role: core
+    row: 3
+    label: "Weather"
+    sublabel: "APIs"
+    generic: cloud
+
+  - id: src-erp
+    layer: sources
+    role: core
+    row: 4
+    label: "ERP"
+    sublabel: "SAP/Oracle"
+    generic: database
+
+  # Ingestion - All core as data flows through
+  - id: ing-stream
+    layer: ingestion
+    role: core
+    row: 0
+    label: "Streaming"
+    sublabel: "Real-time"
+
+  - id: ing-batch
+    layer: ingestion
+    role: core
+    row: 1
+    label: "Batch"
+    sublabel: "Scheduled"
+
+  - id: ing-cdc
+    layer: ingestion
+    role: core
+    row: 2
+    label: "CDC"
+    sublabel: "Changes"
+
+  # Bronze
+  - id: brz-lake
+    layer: bronze
+    role: core
+    row: 0
+    label: "Raw Lake"
+    sublabel: "10M/day"
+    icon: data-lake
+
+  - id: brz-schema
+    layer: bronze
+    role: supportive
+    row: 1
+    label: "Schema"
+    sublabel: "Registry"
+    icon: data-nosql
+
+  - id: brz-catalog
+    layer: bronze
+    role: supportive
+    row: 2
+    label: "Catalog"
+    sublabel: "Metadata"
+    icon: sec-datgov
+
+  # Silver
+  - id: slv-lake
+    layer: silver
+    role: core
+    row: 0
+    label: "Clean Lake"
+    sublabel: "99.5%"
+    icon: data-lake
+
+  - id: slv-quality
+    layer: silver
+    role: supportive
+    row: 1
+    label: "Quality"
+    sublabel: "Validation"
+    icon: sec-policy
+
+  - id: slv-dedup
+    layer: silver
+    role: supportive
+    row: 2
+    label: "Dedup"
+    sublabel: "Merge"
+    icon: data-spark
+
+  # Gold - All core (aligned with consumption layer)
+  - id: gld-feature
+    layer: gold
+    role: core
+    row: 0
+    label: "Features"
+    sublabel: "ML store"
+    icon: ai-ml
+
+  - id: gld-lake
+    layer: gold
+    role: core
+    row: 1
+    label: "Business"
+    sublabel: "7yr retention"
+    icon: data-warehouse
+
+  - id: gld-mart
+    layer: gold
+    role: core
+    row: 2
+    label: "Marts"
+    sublabel: "Aggregates"
+    icon: int-bi
+
+  # Consumption - All core as outputs
+  - id: con-ml
+    layer: consumption
+    role: core
+    row: 0
+    label: "ML Training"
+    sublabel: "Pipelines"
+    icon: ai-ml
+
+  - id: con-realtime
+    layer: consumption
+    role: core
+    row: 1
+    label: "Real-time"
+    sublabel: "Streaming"
+    icon: ux-dash
+
+  - id: con-api
+    layer: consumption
+    role: core
+    row: 2
+    label: "Data APIs"
+    sublabel: "REST"
+    icon: edge-api
+
+  - id: con-bi
+    layer: consumption
+    role: core
+    row: 3
+    label: "BI Reports"
+    sublabel: "Dashboards"
+    icon: int-bi
+
+  # Governance - Crosscutting
+  - id: gov-lineage
+    layer: governance
+    role: crosscutting
+    col: 0
+    label: "Lineage"
+    sublabel: "Impact"
+
+  - id: gov-access
+    layer: governance
+    role: crosscutting
+    col: 1
+    label: "Access"
+    sublabel: "RBAC"
+
+  - id: gov-audit
+    layer: governance
+    role: crosscutting
+    col: 2
+    label: "Audit"
+    sublabel: "Logs"
+
+  - id: gov-pii
+    layer: governance
+    role: crosscutting
+    col: 3
+    label: "PII"
+    sublabel: "Masking"
+
+connections:
+  # Sources → Ingestion
+  - from: src-iot
+    to: ing-stream
+    type: data
+  - from: src-camera
+    to: ing-stream
+    type: data
+  - from: src-docs
+    to: ing-batch
+    type: data
+  - from: src-weather
+    to: ing-batch
+    type: data
+  - from: src-erp
+    to: ing-cdc
+    type: data
+
+  # Ingestion → Bronze (keep default green - shared by multiple flows)
+  - from: ing-stream
+    to: brz-lake
+    type: data
+  - from: ing-batch
+    to: brz-lake
+    type: data
+  - from: ing-cdc
+    to: brz-lake
+    type: data
+
+  # Bronze internal
+  - from: brz-lake
+    to: brz-schema
+    type: sync
+  - from: brz-lake
+    to: brz-catalog
+    type: sync
+
+  # Bronze → Silver
+  - from: brz-lake
+    to: slv-lake
+    type: data
+
+  # Silver internal
+  - from: slv-lake
+    to: slv-quality
+    type: sync
+  - from: slv-lake
+    to: slv-dedup
+    type: sync
+
+  # Silver → Gold
+  - from: slv-lake
+    to: gld-lake
+    type: data
+  - from: slv-lake
+    to: gld-feature
+    type: data
+  - from: slv-lake
+    to: gld-mart
+    type: data
+
+  # Gold internal
+  - from: gld-lake
+    to: gld-feature
+    type: sync
+    label: "Weekly enrichment"
+  - from: gld-lake
+    to: gld-mart
+    type: sync
+    label: "Daily enrichment"
+
+  # Gold → Consumption
+  - from: gld-lake
+    to: con-bi
+    type: sync
+  - from: gld-mart
+    to: con-bi
+    type: sync
+  - from: gld-feature
+    to: con-ml
+    type: data
+  - from: gld-mart
+    to: con-api
+    type: sync
+  - from: gld-lake
+    to: con-realtime
+    type: data
+
+styles:
+  node:
+    width: 140
+    height: 70
+    radius: 6
+    iconSize: 30
+
+  # Role-based styling - all uniform
+  roles:
+    core:
+      width: 140
+      height: 70
+      opacity: 1
+      borderWidth: 2
+      fontSize: 12
+      iconSize: 30
+    supportive:
+      width: 140
+      height: 70
+      opacity: 1
+      borderWidth: 2
+      fontSize: 12
+      iconSize: 30
+    crosscutting:
+      width: 140
+      height: 70
+      opacity: 1
+      borderWidth: 2
+      fontSize: 12
+      iconSize: 30
+
+  crosscutting:
+    nodeWidth: 150
+    nodeHeight: 65
+    spacing: 40
+    topPadding: 28
+
+  medallion:
+    bronze:
+      background: "#fef3c7"
+      border: "#CD7F32"
+    silver:
+      background: "#f1f5f9"
+      border: "#94a3b8"
+    gold:
+      background: "#fef9c3"
+      border: "#ca8a04"
+
+  connection:
+    sync:
+      stroke: "#94a3b8"
+      strokeWidth: 1.5
+      dash: "4,4"
+    data:
+      stroke: "#10b981"
+      strokeWidth: 2
+
+  theme:
+    light:
+      background: "#ffffff"
+      layerBg: "#fafafa"
+      nodeBg: "#ffffff"
+      nodeBorder: "#e2e8f0"
+      text: "#1e293b"
+      textMuted: "#64748b"
+      headerColor: "#475569"
+      layerBorder: "#e5e7eb"

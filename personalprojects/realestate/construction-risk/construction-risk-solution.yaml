@@ -1,0 +1,481 @@
+# Construction Risk Analytics - Solution Architecture
+diagram:
+  id: construction-risk-solution
+  title: "Construction Risk Analytics - Solution Architecture"
+  type: solution
+  theme: light
+  dimensions:
+    width: 1800
+    height: 700
+  output:
+    filename: "construction-risk-solution"
+
+layout:
+  direction: left-to-right
+  padding: 15
+  headerHeight: 50
+  layerPadding: 15
+  autoPosition: true
+  layerGap: 10
+  startX: 10
+  gridSpacing:
+    x: 12
+    y: 10
+  layers:
+    - id: edge
+      name: "Edge"
+      width: 170
+      columns: 1
+      accentColor: "#8b5cf6"
+
+    - id: data
+      name: "Data"
+      width: 170
+      columns: 1
+      accentColor: "#10b981"
+
+    - id: ai
+      name: "AI/ML"
+      width: 170
+      columns: 1
+      accentColor: "#f59e0b"
+
+    - id: app
+      name: "Application"
+      width: 170
+      columns: 1
+      fixedPositioning: true
+      accentColor: "#3b82f6"
+
+    - id: integration
+      name: "Integration"
+      width: 170
+      columns: 1
+      accentColor: "#a855f7"
+
+    - id: ux
+      name: "Experience"
+      width: 170
+      columns: 1
+      fixedPositioning: true
+      accentColor: "#ec4899"
+
+    - id: security
+      name: "Security"
+      type: crosscutting
+      y: 590
+      height: 100
+      accentColor: "#dc2626"
+
+# Flow Scenarios - Disabled for cleaner static diagram
+# flows:
+#   - id: realtime
+#     name: "Real-time"
+#     color: "#10b981"
+#     speed: 1.5
+#     path: [edge-iot, edge-stream, data-lake, ai-ml, app-k8s, ux-dash]
+#
+#   - id: api
+#     name: "API"
+#     color: "#3b82f6"
+#     speed: 1.8
+#     path: [ux-cdn, edge-api, app-k8s, data-nosql]
+#
+#   - id: ml
+#     name: "ML"
+#     color: "#f59e0b"
+#     speed: 2
+#     path: [data-warehouse, ai-ml, ai-vector, app-k8s]
+#
+#   - id: events
+#     name: "Events"
+#     color: "#8b5cf6"
+#     speed: 1.6
+#     path: [app-k8s, int-event, app-notify]
+
+nodes:
+
+  # Edge Layer (4 nodes, single column)
+  - id: edge-iot
+    layer: edge
+    role: core
+    row: 0
+    label: "IoT Ingestion"
+    sublabel: "50K devices"
+
+  - id: edge-stream
+    layer: edge
+    role: core
+    row: 1
+    label: "Streaming"
+    sublabel: "Real-time"
+
+  - id: edge-api
+    layer: edge
+    role: core
+    row: 2
+    label: "API Gateway"
+    sublabel: "REST"
+
+  - id: edge-workflow
+    layer: edge
+    role: core
+    row: 3
+    label: "Orchestration"
+    sublabel: "ETL"
+
+  # Data Layer (4 nodes, single column)
+  - id: data-lake
+    layer: data
+    role: core
+    row: 0
+    label: "Data Lake"
+    sublabel: "Storage"
+
+  - id: data-warehouse
+    layer: data
+    role: core
+    row: 1
+    label: "Analytics"
+    sublabel: "SQL/Spark"
+
+  - id: data-nosql
+    layer: data
+    role: core
+    row: 2
+    label: "Operational"
+    sublabel: "NoSQL"
+
+  - id: data-spark
+    layer: data
+    role: core
+    row: 3
+    label: "Processing"
+    sublabel: "Spark"
+
+  # AI/ML Layer (4 nodes, single column)
+  - id: ai-ml
+    layer: ai
+    role: core
+    row: 0
+    label: "ML Training"
+    sublabel: "Pipelines"
+
+  - id: ai-llm
+    layer: ai
+    role: core
+    row: 1
+    label: "Gen AI"
+    sublabel: "LLM"
+
+  - id: ai-vision
+    layer: ai
+    role: core
+    row: 2
+    label: "Vision"
+    sublabel: "Detection"
+
+  - id: ai-vector
+    layer: ai
+    role: core
+    row: 3
+    label: "Search"
+    sublabel: "Vector"
+
+  # Application Layer (6 nodes, single column)
+  - id: app-k8s
+    layer: app
+    role: core
+    row: 0
+    label: "Containers"
+    sublabel: "Kubernetes"
+
+  - id: app-func
+    layer: app
+    role: core
+    row: 1
+    label: "Serverless"
+    sublabel: "Events"
+
+  - id: app-ws
+    layer: app
+    role: core
+    row: 2
+    label: "Real-time"
+    sublabel: "WebSocket"
+
+  - id: app-web
+    layer: app
+    role: core
+    row: 3
+    label: "Web Apps"
+    sublabel: "Hosting"
+
+  - id: app-notify
+    layer: app
+    role: core
+    row: 4
+    label: "Push"
+    sublabel: "Mobile"
+
+  - id: app-cache
+    layer: app
+    role: core
+    row: 5
+    label: "Caching"
+    sublabel: "In-memory"
+
+  # Integration Layer (5 nodes, single column)
+  - id: int-queue
+    layer: integration
+    role: core
+    row: 0
+    label: "Messaging"
+    sublabel: "Queues"
+
+  - id: int-event
+    layer: integration
+    role: core
+    row: 1
+    label: "Events"
+    sublabel: "Routing"
+
+  - id: int-bi
+    layer: integration
+    role: core
+    row: 2
+    label: "Reports"
+    sublabel: "Dashboards"
+
+  - id: int-cicd
+    layer: integration
+    role: core
+    row: 3
+    label: "CI/CD"
+    sublabel: "Pipelines"
+
+  - id: int-apm
+    layer: integration
+    role: core
+    row: 4
+    label: "Observability"
+    sublabel: "APM"
+
+  # Experience Layer (4 nodes, single column)
+  - id: ux-dash
+    layer: ux
+    role: core
+    row: 0
+    label: "Dashboard"
+    sublabel: "Risk KPIs"
+
+  - id: ux-mobile
+    layer: ux
+    role: core
+    row: 1
+    label: "Mobile"
+    sublabel: "Apps"
+
+  - id: ux-bot
+    layer: ux
+    role: core
+    row: 2
+    label: "Chat AI"
+    sublabel: "Copilot"
+
+  - id: ux-cdn
+    layer: ux
+    role: core
+    row: 3
+    label: "CDN/WAF"
+    sublabel: "Global"
+
+  # Security - Crosscutting Layer (6 nodes, horizontal)
+  - id: sec-identity
+    layer: security
+    role: crosscutting
+    col: 0
+    label: "Identity"
+    sublabel: "SSO/MFA"
+
+  - id: sec-secrets
+    layer: security
+    role: crosscutting
+    col: 1
+    label: "Secrets"
+    sublabel: "Encryption"
+
+  - id: sec-policy
+    layer: security
+    role: crosscutting
+    col: 2
+    label: "Governance"
+    sublabel: "Compliance"
+
+  - id: sec-threat
+    layer: security
+    role: crosscutting
+    col: 3
+    label: "SIEM"
+    sublabel: "Threat"
+
+  - id: sec-network
+    layer: security
+    role: crosscutting
+    col: 4
+    label: "Network"
+    sublabel: "WAF"
+
+  - id: sec-observe
+    layer: security
+    role: crosscutting
+    col: 5
+    label: "Logs"
+    sublabel: "Audit"
+
+connections:
+  # Edge flows
+  - from: edge-iot
+    to: edge-stream
+    type: async
+  - from: edge-stream
+    to: data-lake
+    type: data
+  - from: edge-stream
+    to: app-func
+    type: async
+  - from: edge-api
+    to: app-k8s
+    type: sync
+  - from: edge-workflow
+    to: data-lake
+    type: data
+
+  # Data flows
+  - from: data-lake
+    to: data-warehouse
+    type: data
+  - from: data-lake
+    to: ai-ml
+    type: data
+  - from: data-warehouse
+    to: ai-ml
+    type: data
+  - from: data-warehouse
+    to: int-bi
+    type: sync
+  - from: data-nosql
+    to: app-k8s
+    type: sync
+  - from: data-nosql
+    to: app-cache
+    type: sync
+  - from: data-spark
+    to: ai-ml
+    type: data
+
+  # AI flows
+  - from: ai-ml
+    to: ai-vector
+    type: sync
+  - from: ai-llm
+    to: ai-vector
+    type: sync
+  - from: ai-llm
+    to: app-k8s
+    type: sync
+  - from: ai-vision
+    to: app-k8s
+    type: sync
+
+  # App flows
+  - from: app-k8s
+    to: int-queue
+    type: async
+  - from: app-k8s
+    to: int-event
+    type: async
+  - from: app-k8s
+    to: ux-dash
+    type: sync
+  - from: app-func
+    to: int-event
+    type: async
+  - from: app-ws
+    to: ux-dash
+    type: sync
+  - from: app-ws
+    to: ux-mobile
+    type: sync
+
+  # Integration flows
+  - from: int-event
+    to: app-notify
+    type: async
+  - from: int-event
+    to: ux-dash
+    type: async
+  - from: int-bi
+    to: ux-dash
+    type: sync
+
+  # UX flows
+  - from: ux-cdn
+    to: edge-api
+    type: sync
+  - from: ux-bot
+    to: ai-llm
+    type: sync
+
+styles:
+  node:
+    width: 140
+    height: 70
+    radius: 6
+    iconSize: 30
+
+  # Role-based styling - all uniform
+  roles:
+    core:
+      width: 140
+      height: 70
+      opacity: 1
+      borderWidth: 2
+      fontSize: 12
+      iconSize: 30
+    crosscutting:
+      width: 140
+      height: 70
+      opacity: 1
+      borderWidth: 2
+      fontSize: 12
+      iconSize: 30
+
+  crosscutting:
+    nodeWidth: 140
+    nodeHeight: 70
+    spacing: 40
+    topPadding: 28
+
+  connection:
+    sync:
+      stroke: "#94a3b8"
+      strokeWidth: 1.5
+    async:
+      stroke: "#8b5cf6"
+      strokeWidth: 1.5
+      dash: "5,3"
+    data:
+      stroke: "#10b981"
+      strokeWidth: 2
+
+  theme:
+    light:
+      background: "#ffffff"
+      layerBg: "#fafafa"
+      nodeBg: "#ffffff"
+      nodeBorder: "#e2e8f0"
+      text: "#1e293b"
+      textMuted: "#64748b"
+      headerColor: "#475569"
+      layerBorder: "#e5e7eb"
